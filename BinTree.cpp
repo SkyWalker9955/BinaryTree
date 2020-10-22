@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <array>
 using namespace std;
 
 class TreeNode {
@@ -9,29 +10,31 @@ public:
 };
 
 class Tree {
+
 private:
     TreeNode* root;
 public:
     void initTree();
-    TreeNode makeTreeNode(int data);
+    TreeNode* makeTreeNode(int data);
     void setLeft(TreeNode* N, int num);
     void setRight(TreeNode* N, int num);
     void buildTree(int arr[]);
+    void inOrder(TreeNode* N);
 };
 ////////////////////////////////////////////
 void Tree::initTree() 
 {
-    root = NULL;
+    this->root = NULL;
 }
 
-TreeNode Tree::makeTreeNode(int data)
+TreeNode* Tree::makeTreeNode(int data)
 {
     TreeNode* Node = new TreeNode;
     Node->data = data;
     Node->left = NULL;
     Node->right = NULL;
     
-    return TreeNode();
+    return Node;
 }
 
 void Tree::setLeft(TreeNode* N, int num)
@@ -40,7 +43,7 @@ void Tree::setLeft(TreeNode* N, int num)
         cout << "Error: left node already exists" << endl;
     }
     else {
-        N->left = &(makeTreeNode(num));
+        N->left = makeTreeNode(num);
     }
 }
 
@@ -50,20 +53,37 @@ void Tree::setRight(TreeNode* N, int num)
         cout << "Error: right node already exists" << endl;
     }
     else {
-        N->right = &(makeTreeNode(num));
+        N->right = makeTreeNode(num);
     }
 }
 
-void Tree::buildTree(int arr[])
+void Tree::inOrder(TreeNode* N)
+{
+    //Go left
+    if (N->left != NULL) {
+        inOrder(N->left);
+    }
+
+    //Visit root
+    cout << N->data << endl;
+
+    //Go right 
+    if (N->right != NULL) {
+        inOrder(N->right);
+    }
+}
+
+void Tree::buildTree(int arr [])
 {
     initTree();
-    int i; 
-    for (i = 0; i < sizeof(arr); i++) {
+    int i;
+    
+    for (i = 0; i < 8; i++) {
         int temp = arr[i];
 
         //create the root tree
         if (root == NULL) {
-            root = &(makeTreeNode(temp));
+            root = makeTreeNode(temp);
         }
         else {
             //find numbers position in the tree
@@ -100,12 +120,14 @@ void Tree::buildTree(int arr[])
             }
         }
     }
+    inOrder(root);
 }
+
 ///////////////////////////////////////////////////////
 
 int main()
 {
     Tree K;
-    int arr[8] = { 4, 6, 5, 8, 7, 9, 1, 11 };
+    int arr [8] = {4,6,5,8,7,9,1,11};
     K.buildTree(arr);
 }
